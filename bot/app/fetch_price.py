@@ -79,8 +79,8 @@ def identify_bullish_pinbar(current_candle, previous_candle):
         low_price = float(current_candle[3])
         close_price = float(current_candle[4])
 
-        # Tiêu chí 1: High > Close > Open
-        if not (close_price > open_price):
+        # Tiêu chí 1:  Close > Open : Nến tăng giá
+        if (close_price < open_price):
             return False
 
         # Tính toán các thành phần nến
@@ -89,15 +89,15 @@ def identify_bullish_pinbar(current_candle, previous_candle):
         upper_wick = abs(high_price - close_price)
         total_range = abs(high_price - low_price)
 
-        # Tiêu chí 2: 0.1 * Lower Wick < Body < 0.3 * Lower Wick
-        if not (body > lower_wick/3):
+        # Tiêu chí 2: Thân nến nhỏ hơn 1/3 chiều dài của đuôi nến
+        if (body > lower_wick/3):
             return False
 
-        # Tiêu chí 3: Body < 0.5 * Upper Wick
-        # if (body < upper_wick):
-        #     return False
+        # Tiêu chí 3: Thân nến lớn hơn mũi trên
+        if (body < upper_wick):
+            return False
 
-        # Tiêu chí 4: Low < Low của cây nến trước đó
+        # Tiêu chí 4: Giá thấp nhất của cây nến hiện tại < Giá thấp nhất của cây nến trước đó
         previous_low = float(previous_candle[3])
         if not (low_price < previous_low):
             return False
@@ -107,7 +107,7 @@ def identify_bullish_pinbar(current_candle, previous_candle):
             return False
 
          # Tiêu chí 6 : Đuôi nến dài ít nhất 2/3 chiều dài tổng thể của nến
-        if not (lower_wick < total_range * 2/3):
+        if (lower_wick < total_range * 2/3):
             return False
 
         return True 
